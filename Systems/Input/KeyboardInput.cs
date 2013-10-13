@@ -92,7 +92,6 @@ public class KeyboardInput
                 listen_keys[i].ResetMilliecondsDown();
             }
         }
-
         
         held_key_buffer = held_key_buffer_;
 		previous_keyboard_state = CurrentKeyboardState;
