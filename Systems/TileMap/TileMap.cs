@@ -106,11 +106,6 @@ namespace Systems.TileMap
 
         }
 
-        public Rectangle[] GetTileAABB(Vector2 Location, float Radius)
-        {
-	    
-        }
-
         public void Draw(SpriteBatch SpriteBatch)
         {
             //TODO better way of zindexing
