@@ -25,6 +25,8 @@ namespace Systems.TileMap
 
             this.origin = Origin;
 
+            if (RootTileDirectory != "") RootTileDirectory += @"\";
+
             // Declare delimiter arrays to split lines and parse them
             char[] line_delimiters = { '\n' };
             char[] item_delimiters = { ' ' };
@@ -102,6 +104,11 @@ namespace Systems.TileMap
             // Turn the sorted list into an array (changes by this point are at best very limited)
 
 
+        }
+
+        public Rectangle[] GetTileAABB(Vector2 Location, float Radius)
+        {
+	    
         }
 
         public void Draw(SpriteBatch SpriteBatch)
