@@ -28,7 +28,7 @@ namespace Systems.TileMap
             if (RootTileDirectory != "") RootTileDirectory += @"\";
 
             // Declare delimiter arrays to split lines and parse them
-            char[] line_delimiters = { '\n' };
+            char[] line_delimiters = { '\r', '\n' };
             char[] item_delimiters = { ' ' };
 
             // Read map file at location given
@@ -43,8 +43,8 @@ namespace Systems.TileMap
             // Remove comments from the lines array. Also, clean the lines from extra whitespace and other things
             var lines_no_comments =
                 from line in lines
-                where !line.StartsWith("#") && line.Replace("\r", "") != ""
-                select line.Replace("\r", "").Trim().ToLower();
+                where !line.StartsWith("#")
+                select line.Trim().ToLower();
             // Group all the tile declarations together
             var tile_declarations =
                 from line in lines_no_comments
@@ -98,6 +98,7 @@ namespace Systems.TileMap
                 tile_map.Add(new Tile(items[1], (float)Convert.ToInt16(items[2]), (float)Convert.ToInt16(items[3]),
                     Convert.ToInt16(items[4])));
 
+		// TODO convert the items once, dumbass
                 if (Convert.ToInt16(items[4]) > largest_z_index) largest_z_index = Convert.ToInt16(items[4]);
             }
 
