@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Systems;
 using Systems.Input;
 #endregion
+//TODO: Scrap all this bullshit
 namespace Systems.UI
 {
     /// <summary>
