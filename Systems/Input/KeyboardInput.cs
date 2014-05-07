@@ -11,14 +11,14 @@ namespace Systems.Input
 /// </summary>
 public class KeyboardInput
 {
-    List<Keys> key_buffer;
-    List<Keys> held_key_buffer = new List<Keys>();
+	List<Keys> key_buffer;
+	List<Keys> held_key_buffer = new List<Keys>();
 	Keys[] array_of_pressed_keys;
-    List<Keystroke> listen_keys;
+	List<Keystroke> listen_keys;
 
 	KeyboardState previous_keyboard_state = new KeyboardState();
 
-    float hold_threshold;
+	float hold_threshold;
 		
 	/// <summary>
 	/// Initializes a new instance of KeyboardInput class
@@ -50,14 +50,14 @@ public class KeyboardInput
 
 	}
 
-    /// <summary>
-    /// Sets the time threshold where a pressed button becomes a held down button
-    /// </summary>
-    /// <param name="Threshold">Threshold in milliseconds</param>
-    public void SetHoldThreshold(float Threshold)
-    {
-        this.hold_threshold = Threshold;
-    }
+	/// <summary>
+	/// Sets the time threshold where a pressed button becomes a held down button
+	/// </summary>
+	/// <param name="Threshold">Threshold in milliseconds</param>
+	public void SetHoldThreshold(float Threshold)
+	{
+		this.hold_threshold = Threshold;
+	}
 		
 	/// <summary>
 	/// Gets list of pressed keys, if a specific list of listen keys were specified, only keys on that list will be returned if they 
@@ -67,33 +67,33 @@ public class KeyboardInput
 	public void UpdateInput(KeyboardState CurrentKeyboardState, float MillisecondsSinceLastFrame) //Main purpose is to be used by the update loop/method.
 	{
 		array_of_pressed_keys = CurrentKeyboardState.GetPressedKeys();
-        List<Keys> held_key_buffer_ = new List<Keys>();
-        
-        for (int i = 0; i < listen_keys.Count; i++)
-        {
-            if (CurrentKeyboardState.IsKeyDown(listen_keys[i].Key) && previous_keyboard_state.IsKeyUp(listen_keys[i].Key))
-            {
-                key_buffer.Add(listen_keys[i].Key);
-            }
-        }
+		List<Keys> held_key_buffer_ = new List<Keys>();
+		
+		for (int i = 0; i < listen_keys.Count; i++)
+		{
+			if (CurrentKeyboardState.IsKeyDown(listen_keys[i].Key) && previous_keyboard_state.IsKeyUp(listen_keys[i].Key))
+			{
+				key_buffer.Add(listen_keys[i].Key);
+			}
+		}
 
-        for (int i = 0; i < listen_keys.Count; i++)
-        {
-            if (CurrentKeyboardState.IsKeyDown(listen_keys[i].Key) && previous_keyboard_state.IsKeyDown(listen_keys[i].Key))
-            {
-                listen_keys[i].AddtoMillisecondsDown(MillisecondsSinceLastFrame);
-                if (listen_keys[i].MillisecondsDown >= this.hold_threshold)
-                {
-                    held_key_buffer_.Add(listen_keys[i].Key);
-                }
-            }
-            else if (CurrentKeyboardState.IsKeyUp(listen_keys[i].Key) && previous_keyboard_state.IsKeyDown(listen_keys[i].Key))
-            {
-                listen_keys[i].ResetMilliecondsDown();
-            }
-        }
-        
-        held_key_buffer = held_key_buffer_;
+		for (int i = 0; i < listen_keys.Count; i++)
+		{
+			if (CurrentKeyboardState.IsKeyDown(listen_keys[i].Key) && previous_keyboard_state.IsKeyDown(listen_keys[i].Key))
+			{
+				listen_keys[i].AddtoMillisecondsDown(MillisecondsSinceLastFrame);
+				if (listen_keys[i].MillisecondsDown >= this.hold_threshold)
+				{
+					held_key_buffer_.Add(listen_keys[i].Key);
+				}
+			}
+			else if (CurrentKeyboardState.IsKeyUp(listen_keys[i].Key) && previous_keyboard_state.IsKeyDown(listen_keys[i].Key))
+			{
+				listen_keys[i].ResetMilliecondsDown();
+			}
+		}
+		
+		held_key_buffer = held_key_buffer_;
 		previous_keyboard_state = CurrentKeyboardState;
 	}
 
@@ -109,8 +109,8 @@ public class KeyboardInput
 
 	public List<Keys> GetHeldKeys()
 	{
-        return held_key_buffer;
-    }
+		return held_key_buffer;
+	}
 
 	/// <summary>
 	/// Removes the first item from the input buffer, after it has been processed.
