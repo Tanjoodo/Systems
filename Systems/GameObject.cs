@@ -36,9 +36,52 @@ namespace Systems
         {
             Position = position;
         }
-        public void Update(){} //Filler
 
-        public void Draw(SpriteBatch SpriteBatch){} //Filler as well; as there might be different requirements for different objects.
+	/// <summary>
+	/// Sets the object's position
+	/// </summary>
+	/// <param name="Position">Position to be set to</param>
+        public void SetPosition(Vector2 Position)
+        {
+            this.position = Position;
+        }
+
+	/// <summary>
+	/// Gets the position of the object
+	/// </summary>
+	/// <returns></returns>
+        public Vector2 GetPosition()
+        {
+            return this.position;
+        }
+
+	/// <summary>
+	/// Sets the object's texture
+	/// </summary>
+	/// <param name="Texture">Texture to be set</param>
+        public void SetTexture(Texture2D Texture)
+        {
+            this.texture = Texture;
+        }
+
+	/// <summary>
+	/// Gets the object's texture
+	/// </summary>
+	/// <returns>Returns object's texture.</returns>
+        public Texture2D GetTexture()
+        {
+            return this.texture;
+        }
+
+	/// <summary>
+	/// Gets object's axis aligned bounding box
+	/// </summary>
+	/// <returns>Returns a rectangle.</returns>
+        public Rectangle GetAABB()
+        {
+            return new Rectangle((int)this.position.X, (int)this.position.Y,
+                this.texture.Width, this.texture.Height);
+        }
          
     }
 }
