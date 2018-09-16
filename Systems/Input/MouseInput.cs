@@ -12,53 +12,54 @@ namespace Systems.Input
 	/// </summary>
 	public class MouseInput
 	{
-		const int NUMBER_OF_BUFFERS = 3;
+		Point _mousePosition;
+		Point _prevMousePosition;
+		MouseState _prevMouseState;
 
-		Vector2 mouse_position;
-		Vector2 prev_mouse_position;
-		MouseState prev_mouse_state;
+		public enum Button { Left, Right, Middle }
 
-		public enum Buttons { LeftButton, RightButton, MiddleButton }
+        Dictionary<Button, List<Point>> _buffers = new Dictionary<Button, List<Point>>
+        {
+            {Button.Left, new List<Point>()},
+            {Button.Right, new List<Point>() },
+            {Button.Middle, new List<Point>() }
+        };
 
-		List<Vector2> left_button_buffer = new List<Vector2>();
-		List<Vector2> right_button_buffer = new List<Vector2>();
-		List<Vector2> middle_button_buffer = new List<Vector2>();
+        public Dictionary<Button, List<Point>> Buffers => _buffers;
+
 		/// <summary>
 		/// Creates a new instance of MouseInput
 		/// </summary>
-		//TODO: don't record mouse events if window is not in focus
-		public MouseInput(bool OnlyWorkWhenInFocus = true)
+		public MouseInput(bool onlyWorkWhenInFocus = true)
 		{
-			mouse_position = Vector2.Zero; 
+            //TODO: don't record mouse events if window is not in focus
+            _mousePosition = Point.Zero; 
 		}
 
 		/// <summary>
 		/// Gets the absolute mouse position since the last Update().
 		/// </summary>
 		/// <returns>Returns a Vector2 containing the mouse position.</returns>
-		public Vector2 GetMousePosition()
-		{
-			return mouse_position;
-		}
+		public Point MousePosition => _mousePosition;
 
 		/// <summary>
 		/// Gets the relative mouse position from a specific point.
 		/// </summary>
-		/// <param name="Point">A point in the form of a Vector2.</param>
+		/// <param name="point">A point in the form of a Vector2.</param>
 		/// <returns>Returns a Vector2 containing the relative position between the mouse cursor and the specified point.</returns>
-		public Vector2 GetRelativePosition(Vector2 Point)
+		public Vector2 GetRelativePosition(Point point)
 		{
-			return new Vector2(mouse_position.X - Point.X, mouse_position.Y - Point.Y);
+            return (_mousePosition - point).ToVector2();
 		}
 
 		/// <summary>
 		/// Gets the relative mouse position from the center of a bounding box.
 		/// </summary>
-		/// <param name="BoundingBox">Bounding box of an object in the form of a Rectangle.</param>
+		/// <param name="boundingBox">Bounding box of an object in the form of a Rectangle.</param>
 		/// <returns>Returns a Vector2 containing the relative position between the mouse cursor and the center of the specified bounding box.</returns>
-		public Vector2 GetRelativePosition(Rectangle BoundingBox)
+		public Vector2 GetRelativePosition(Rectangle boundingBox)
 		{
-			return new Vector2(mouse_position.X - BoundingBox.Center.X, mouse_position.Y - BoundingBox.Center.Y);
+            return (_mousePosition - boundingBox.Center).ToVector2();
 		}
 
 		/// <summary>
@@ -67,107 +68,60 @@ namespace Systems.Input
 		/// <returns>Returns a Vector2 that contains the delta position of mouse.</returns>
 		public Vector2 GetDeltaPosition()
 		{
-			//TODO: Delta mouse position
-			return new Vector2(mouse_position.X - prev_mouse_position.X, mouse_position.Y - prev_mouse_position.Y);
+            //TODO: Delta mouse position
+            return (_mousePosition - _prevMousePosition).ToVector2();
 		}
 
 
 		public bool MouseMoved()
 		{
-			return mouse_position == prev_mouse_position;
+			return _mousePosition == _prevMousePosition;
 		}
 
-		public void Update(MouseState CurrentMouseState)
+		public void Update(MouseState currentMouseState)
 		{
-			//TODO: Handle mouse button hold. 
-			this.prev_mouse_position = mouse_position;
-			this.mouse_position = new Vector2((float)CurrentMouseState.X, (float)CurrentMouseState.Y);
+            //TODO: Handle mouse button hold. 
+            _prevMousePosition = _mousePosition;
+            _mousePosition = currentMouseState.Position;
 
-			//Handle left click buffer, if mouse is clicked, add its coordinates to the buffer.
-			if ((CurrentMouseState.LeftButton == ButtonState.Pressed) && (prev_mouse_state.LeftButton == ButtonState.Released))
+			// Handle left click buffer, if mouse is clicked, add its coordinates to the buffer.
+			if ((currentMouseState.LeftButton == ButtonState.Pressed) && (_prevMouseState.LeftButton == ButtonState.Released))
 			{
-				left_button_buffer.Add(new Vector2(mouse_position.X, mouse_position.Y));
+				Buffers[Button.Left].Add(_mousePosition);
 			}
 
-			//Handle right click buffer, if mouse is clicked, add its coordinates to the buffer.
-			if ((CurrentMouseState.RightButton == ButtonState.Pressed) && (prev_mouse_state.RightButton == ButtonState.Released))
+			// Handle right click buffer, if mouse is clicked, add its coordinates to the buffer.
+			if ((currentMouseState.RightButton == ButtonState.Pressed) && (_prevMouseState.RightButton == ButtonState.Released))
 			{
-				right_button_buffer.Add(new Vector2(mouse_position.X, mouse_position.Y));				
+				Buffers[Button.Right].Add(_mousePosition);				
 			}
 
-			//Handle middle click buffer, same as above.
-			if ((CurrentMouseState.MiddleButton == ButtonState.Pressed) && (prev_mouse_state.LeftButton == ButtonState.Released))
+			// Handle middle click buffer, if mouse is clicked, add its coordinates to the buffer.
+			if ((currentMouseState.MiddleButton == ButtonState.Pressed) && (_prevMouseState.LeftButton == ButtonState.Released))
 			{
-				middle_button_buffer.Add(new Vector2(mouse_position.X, mouse_position.Y));
+				Buffers[Button.Middle].Add(_mousePosition);
 			}
-			
 		}
 
 		/// <summary>
-		/// Removes the first item in a buffer, hopefully after it has been processed and responded to.
+		/// Removes the first item in a buffer.
 		/// </summary>
-		/// <param name="Button">The button that the buffer belongs to</param>
-		public void RemoveFirstFromBuffer(Buttons Button)
+		/// <param name="button">The button that the buffer belongs to. </param>
+		public void RemoveFirstFromBuffer(Button button)
 		{
-			switch (Button)
-			{
-				case (Buttons.LeftButton):
-					left_button_buffer.RemoveAt(left_button_buffer.Count - 1);
-					break;
-				case (Buttons.RightButton):
-					right_button_buffer.RemoveAt(right_button_buffer.Count - 1);
-					break;
-				case (Buttons.MiddleButton):
-					middle_button_buffer.RemoveAt(middle_button_buffer.Count - 1);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-				
-			}
-		}
+            Buffers[button].RemoveAt(Buffers[button].Count - 1);
+        }
 
-		//DO: Fix summaries.
-		/// <summary>
-		/// Gets a specific buffer specified by the buffer identifier.
-		/// Each buffer has its own unique identifier, the left button identifier is 0, right button buffer is 1 and middle button identifier is 2
-		/// </summary>
-		/// <param name="BufferIdentifier">Unique buffer identifier</param>
-		/// <returns>Returns the requested buffer in the form of a Vector2 list containing the locations of clicks.</returns>
-		public List<Vector2> GetBuffer(Buttons Button)
+        //DO: Fix summaries.
+        /// <summary>
+        /// Gets a specific buffer specified by the buffer identifier.
+        /// Each buffer has its own unique identifier, the left button identifier is 0, right button buffer is 1 and middle button identifier is 2
+        /// </summary>
+        /// <param name="BufferIdentifier">Unique buffer identifier</param>
+        /// <returns>Returns the requested buffer in the form of a Vector2 list containing the locations of clicks.</returns>
+        public List<Point> GetBuffer(Button button)
 		{
-			switch (Button)
-			{
-				case Buttons.LeftButton:
-					return left_button_buffer;
-				case Buttons.RightButton:
-					return right_button_buffer;
-				case Buttons.MiddleButton:
-					return middle_button_buffer;
-				default:
-					throw new ArgumentOutOfRangeException();
-			} 
+            return Buffers[button];
 		}
-
-
-		/// <summary>
-		/// Gets all buffer in a list of lists, each item in the containing list is a buffer. Access buffers by their index which is the same
-		/// as their identifiers.
-		/// 
-	 
-		/// Each buffer has its own unique identifier, the left button identifier is 0, right button buffer is 1 and middle button identifier is 2
-		/// </summary>
-		/// <returns>Returns a list of buffer as a list of Vector2 lists.</returns>
-		public List<List<Vector2>> GetAllBuffers()
-		{
-			//TD: Cleaner way of populating return_list
-			List<List<Vector2>> return_list = new List<List<Vector2>>();
-			return_list.Add(left_button_buffer); return_list.Add(right_button_buffer); return_list.Add(middle_button_buffer);
-			return return_list;
-		}
-		
-
-		
-
-
 	}
 }
