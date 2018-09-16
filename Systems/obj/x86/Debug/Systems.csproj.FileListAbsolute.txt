@@ -1,6 +1,0 @@
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\obj\x86\Debug\Systems.csprojResolveAssemblyReference.cache
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\bin\x86\Debug\Systems.dll
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\bin\x86\Debug\Systems.pdb
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\obj\x86\Debug\Systems.dll
-c:\users\mohammed\documents\visual studio 2010\Projects\Systems\Systems\obj\x86\Debug\Systems.pdb

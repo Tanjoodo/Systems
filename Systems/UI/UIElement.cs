@@ -26,18 +26,18 @@ namespace Systems.UI
     /// Parent class of all UI elements, a UI element can contain other UI elements in it.
     /// This class can be inherited.
     /// </summary>
-    public class UI_Element
+    public class UIElement
     {
         string label;
         int index;
  
-        List<UI_Element> children = new List<UI_Element>();
+        List<UIElement> children = new List<UIElement>();
         /// <summary>
         /// Initializes a new instance of UI_Element. 
         /// </summary>
         /// <param name="Label">Identifying label, for example "save_game_prompt"... etc. Ultimately, each label should be different.</param>
         /// <param name="Index">Priority index. This is used to set priority to updating/rendering</param>
-        public UI_Element(string Label, int Index)
+        public UIElement(string Label, int Index)
         {
             this.label = Label;
             this.index = Index;
@@ -55,7 +55,7 @@ namespace Systems.UI
         /// Gets the children of the specified UI element.
         /// </summary>
         /// <returns>Returns a list of all the UI_Elements that are children to the specified UI element.</returns>
-        public List<UI_Element> GetChildren()
+        public List<UIElement> GetChildren()
         {
             return children;
         }
@@ -63,7 +63,7 @@ namespace Systems.UI
         /// Adds a child element to the UI
         /// </summary>
         /// <param name="ChildElement">Child UI element to be added</param>
-        public void AddChild(UI_Element ChildElement)
+        public void AddChild(UIElement ChildElement)
         {
             children.Add(ChildElement);
         }

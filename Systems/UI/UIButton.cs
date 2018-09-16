@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Systems.UI
 {
-    class UI_Button
+    class UIButton
     {
     }
 }
