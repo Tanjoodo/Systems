@@ -4,17 +4,15 @@ namespace Systems.TileMap
 {
     struct Tile
     {
-        public string  Name;
-        public Vector2 Location;
-        public int     Z;
+        public string Name { get; set; }
+        public Vector2 Location { get; set; }
+        public int Z { get; set; }
 
-        public Tile(string Name, float X, float Y, int Z)
+        public Tile(string name, Point location, int z)
         {
-
-            this.Name = Name;
-            this.Location = new Vector2(X, Y);
-            this.Z = Z;
-            
+            Name = name;
+            Location = location.ToVector2();
+            Z = z;
         }
     }
 }
