@@ -9,68 +9,65 @@
  */
 #endregion 
 
-#region Using statements
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
-#endregion
 
 namespace Systems
 {
     public class Grid
     { 
-        Vector2[,] grid_array;
-        public readonly int columns, rows;
+        Vector2[,] _gridArray;
+        public readonly int _columns, _rows;
         /// <summary>
         /// Initialize Grid object
         /// </summary>
-        /// <param name="Origin">Coordinates of the top left corner of the grid</param>
-        /// <param name="Size">Size of the grid</param>
-        /// <param name="Columns">Number of columns</param>
-        /// <param name="Rows">Number of rows</param>
-        public Grid(Vector2 Origin, Vector2 Size, int Columns, int Rows)
+        /// <param name="origin">Coordinates of the top left corner of the grid</param>
+        /// <param name="size">Size of the grid</param>
+        /// <param name="columns">Number of columns</param>
+        /// <param name="rows">Number of rows</param>
+        public Grid(Vector2 origin, Vector2 size, int columns, int rows)
         {
-            columns = Columns; rows = Rows; //To be used outside the scope of this method.
+            _columns = columns;
+            _rows = rows;
 
             //Figure out the size of each cell, basically just divide size by Columns/Rows
-            Vector2 cell_size = new Vector2(Size.X / Columns, Size.Y / Rows);
+            Vector2 cell_size = new Vector2(size.X / columns, size.Y / rows);
              
-            grid_array = new Vector2[Columns, Rows]; //2D array that holds coordinates to every cell in the grid
+            _gridArray = new Vector2[columns, rows]; //2D array that holds coordinates to every cell in the grid
            
             //Now that we got all the relevant information, we can start constructing the grid.
-            PopulateArray(Columns, Rows, cell_size, Origin);
-        
+            PopulateArray(columns, rows, cell_size, origin);
         }
 
         /// <summary>
         /// Initialize Grid object
         /// </summary>
-        /// <param name="Origin">Coordinates of the top left corner of the grid</param>
-        /// <param name="Size">Size of the grid</param>
-        /// <param name="CellSize">Size of each cell</param>
-        public Grid(Vector2 Origin, Vector2 Size, Vector2 CellSize)
+        /// <param name="origin">Coordinates of the top left corner of the grid</param>
+        /// <param name="size">Size of the grid</param>
+        /// <param name="cellSize">Size of each cell</param>
+        public Grid(Vector2 origin, Vector2 size, Vector2 cellSize)
         {
-            columns = (int)(Size.X / CellSize.X); rows = (int)(Size.Y / CellSize.Y); //To be used outside the scope of this method
+            _columns = (int)(size.X / cellSize.X); _rows = (int)(size.Y / cellSize.Y); //To be used outside the scope of this method
 
-            grid_array = new Vector2[columns, rows];
+            _gridArray = new Vector2[_columns, _rows];
 
             // Now that we got all the relevant information we can start constructing the grid.
-            PopulateArray(columns, rows, CellSize, Origin);
+            PopulateArray(_columns, _rows, cellSize, origin);
            
         }
 
-        void PopulateArray(int Columns, int Rows, Vector2 CellSize, Vector2 Origin)
+        void PopulateArray(int columns, int rows, Vector2 cellSize, Vector2 origin)
         {
-
             //Iterate through the array and fill it with coordinates, we will use a nested for loop for this.
-            for (int i = 0; i < Columns; i++)
+            for (int i = 0; i < columns; i++)
                 {
-                    for (int y = 0; y < Rows; y++)
+                    for (int y = 0; y < rows; y++)
                     {                
-                         grid_array[i, y] = new Vector2(i * CellSize.X + Origin.X, y * CellSize.Y + Origin.Y); 
+                         _gridArray[i, y] = new Vector2(i * cellSize.X + origin.X, y * cellSize.Y + origin.Y); 
                     }
                 }
         }
@@ -78,34 +75,33 @@ namespace Systems
         /// <summary>
         /// Gets screen coordinates of cell
         /// </summary>
-        /// <param name="X">Cell's X position in the grid</param>
-        /// <param name="Y">Cell's Y position in the grid</param>
+        /// <param name="x">Cell's X position in the grid</param>
+        /// <param name="y">Cell's Y position in the grid</param>
         /// <returns>Returns the screen coordinates for the required cell addressed by its grid coordinates</returns>
-        public Vector2 GetCoordinates(int X, int Y)
+        public Vector2 GetCoordinates(int x, int y)
         {
-            return grid_array[X, Y];
+            return _gridArray[x, y];
         }
 
         /// <summary>
         /// Get screen coordinates of cell
         /// </summary>
-        /// <param name="GridPosition">Cell's position in the grid</param>
+        /// <param name="gridPosition">Cell's position in the grid</param>
         /// <returns>Returns the screen coordinates for the required cell addressed by its grid coordinates</returns>
-        public Vector2 GetCoordinates(Vector2 GridPosition)
+        public Vector2 GetCoordinates(Vector2 gridPosition)
         {
-            return grid_array[(int)GridPosition.X, (int)GridPosition.Y];
+            return _gridArray[(int)gridPosition.X, (int)gridPosition.Y];
         }
 
-        public void ApplyTranformationMatrix(Matrix TranformationMatrix)
+        public void ApplyTranformationMatrix(Matrix tranformationMatrix)
         {
-            for (int i = 0; i < columns; i++)
+            for (int i = 0; i < _columns; i++)
             {
-                for (int k = 0; k < rows; k++)
+                for (int k = 0; k < _rows; k++)
                 {
-                    grid_array[i, k] = Vector2.Transform(grid_array[i, k], TranformationMatrix);
+                    _gridArray[i, k] = Vector2.Transform(_gridArray[i, k], tranformationMatrix);
                 }
             }
- 
         }
     }
 }
